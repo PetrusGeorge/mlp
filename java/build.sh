@@ -1,3 +1,3 @@
 #! /usr/bin/bash
-rm *.class
+rm *.class | true
 javac -O  main.java -Xlint:unchecked
