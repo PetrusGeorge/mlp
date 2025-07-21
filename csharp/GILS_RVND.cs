@@ -85,6 +85,10 @@ namespace MLP {
                 }
             }
             (arr[i + 1], arr[right]) = (arr[right], arr[i + 1]); // Troca o pivô
+            // var tmp = arr[i + 1];
+            // arr[i + 1] = arr[right];
+            // arr[right] = tmp;
+            
             return i + 1;
         }
 

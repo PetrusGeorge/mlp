@@ -11,7 +11,7 @@
         pkgs-stable = import nixpkgs-stable {inherit system; };
       in
       {
-        devShells.default = pkgs.mkShell {
+        devShells.default = pkgs.mkShell.override {stdenv = pkgs.swift.stdenv; } {
           buildInputs = with pkgs;[
             stdenv.cc
             gfortran
@@ -31,6 +31,7 @@
             swift-corelibs-libdispatch
           ];
 
+          DOTNET_ROOT="${pkgs.dotnet-sdk}/share/dotnet";
           LD_LIBRARY_PATH="${pkgs.swift-corelibs-libdispatch}/lib";
         };
       });
