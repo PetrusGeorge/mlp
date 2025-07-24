@@ -28,6 +28,7 @@
             mono
             dotnet-sdk
             swift
+            swiftpm
             swift-corelibs-libdispatch
           ];
 
