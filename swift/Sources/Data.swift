@@ -1,5 +1,6 @@
 import Foundation
 
+// Check if class has better performance over struct
 struct Data {
 	var dimension = 0
 	var matrix = [Double]()
@@ -15,40 +16,38 @@ struct Data {
 		rndIdx += 1
 		return value
 	}
-}
 
-func readInstance() -> Data {
-	let url = URL(fileURLWithPath: "../distance_matrix")
-	let contents = (try? String(contentsOf: url))!
+	init() {
+		let url = URL(fileURLWithPath: "../distance_matrix")
+		let contents = (try? String(contentsOf: url))!
 	
-	let lines = contents.components(separatedBy: "\n")
-
-	var data = Data()
-
-	let dimension = Int(lines[0])!
-	data.dimension = dimension
-	data.matrix = Array(repeating: 0, count: (dimension*dimension))
-	for i in 0...dimension-2 {
+		let lines = contents.components(separatedBy: "\n")
 
 
-		data.matrix[i*dimension + i] = 0
-		var j = i+1
-		var values = lines[i+1].components(separatedBy: " ")
-		values.removeLast()
-		for value in values {
+		let dimension = Int(lines[0])!
+		self.dimension = dimension
+		self.matrix = Array(repeating: 0, count: (dimension*dimension))
+		for i in 0...dimension-2 {
 
-			let converted = Double(value)!
-			data.matrix[i*dimension + j] = converted
-			data.matrix[j*dimension + i] = converted
-			j += 1
+
+			self.matrix[i*dimension + i] = 0
+			var j = i+1
+			var values = lines[i+1].components(separatedBy: " ")
+			values.removeLast()
+			for value in values {
+
+				let converted = Double(value)!
+				self.matrix[i*dimension + j] = converted
+				self.matrix[j*dimension + i] = converted
+				j += 1
+			}
+		}
+
+		let rndCount = Int(lines[dimension+3])!
+		for i in 0...rndCount-1 {
+			let linesIdx = dimension + 4 + i
+			self.rnd.append(Int(lines[linesIdx])!)
 		}
 	}
-
-	let rndCount = Int(lines[dimension+3])!
-	for i in 0...rndCount-1 {
-		let linesIdx = dimension + 4 + i
-		data.rnd.append(Int(lines[linesIdx])!)
-	}
-
-	return data
 }
+
