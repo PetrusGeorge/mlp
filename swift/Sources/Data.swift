@@ -7,7 +7,7 @@ struct Data {
 	var rnd = [Int]()
 	var rndIdx = 0
 
-	func getDistance(i: Int, j: Int) -> Double {
+	func getDistance(_ i: Int, _ j: Int) -> Double {
 		return matrix[i*dimension + j]
 	}
 
@@ -44,7 +44,7 @@ struct Data {
 		}
 
 		let rndCount = Int(lines[dimension+3])!
-		for i in 0...rndCount-1 {
+		for i in 0..<rndCount {
 			let linesIdx = dimension + 4 + i
 			self.rnd.append(Int(lines[linesIdx])!)
 		}

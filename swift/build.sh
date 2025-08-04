@@ -1,1 +1,1 @@
-swift build -c release
+swift build -c release -Xswiftc -Xfrontend -Xswiftc -Ounchecked
