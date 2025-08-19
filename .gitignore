@@ -31,3 +31,8 @@ tempfile
 
 cplusplus/solve
 cplusplus/obj
+
+c/obj
+
+distance_matrix
+load
