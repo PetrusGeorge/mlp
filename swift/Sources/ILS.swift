@@ -134,12 +134,12 @@ func searchSwap(s: inout Solution, data: Data) -> Bool {
 		let sI = s.sequence[i]
 		let sINext = s.sequence[iNext]
 
-		let costConcat1 =               s.getSeq(0, iPrev).t + data.getDistance(sIPrev, sINext)
-		let costConcat2 = costConcat1 + s.getSeq(i, iNext).t + data.getDistance(sI, s.sequence[i+2])
+		let costConcat1 =               s.getSeq(0, iPrev, infoIndex.T.rawValue) + data.getDistance(sIPrev, sINext)
+		let costConcat2 = costConcat1 + s.getSeq(i, iNext, infoIndex.T.rawValue) + data.getDistance(sI, s.sequence[i+2])
 
-		let costNew = s.getSeq(0, iPrev).c
-					+ s.getSeq(i, iNext).w                * costConcat1 + data.getDistance(sINext, sI)
-					+ s.getSeq(iNext+1, data.dimension).w * costConcat2 + s.getSeq(iNext+1, data.dimension).c
+		let costNew = s.getSeq(0, iPrev, infoIndex.C.rawValue)
+					+ s.getSeq(i, iNext, infoIndex.W.rawValue)                * costConcat1 + data.getDistance(sINext, sI)
+					+ s.getSeq(iNext+1, data.dimension, infoIndex.W.rawValue) * costConcat2 + s.getSeq(iNext+1, data.dimension, infoIndex.C.rawValue)
 
 		if costNew < costBest {
 			costBest = costNew - EPSILON
@@ -154,16 +154,16 @@ func searchSwap(s: inout Solution, data: Data) -> Bool {
 			let sJ = s.sequence[j]
 			let sJNext = s.sequence[jNext]
 
-			let costConcat1 = s.getSeq(0, iPrev).t + data.getDistance(sIPrev, sJ)
+			let costConcat1 = s.getSeq(0, iPrev, infoIndex.T.rawValue) + data.getDistance(sIPrev, sJ)
 			let costConcat2 = costConcat1 + data.getDistance(sJ, sINext)
-			let costConcat3 = costConcat2 + s.getSeq(iNext, jPrev).t + data.getDistance(sJPrev, sI)
+			let costConcat3 = costConcat2 + s.getSeq(iNext, jPrev, infoIndex.T.rawValue) + data.getDistance(sJPrev, sI)
 			let costConcat4 = costConcat3 + data.getDistance(sI, sJNext)
 
-			let costNew = s.getSeq(0, iPrev).c
+			let costNew = s.getSeq(0, iPrev, infoIndex.C.rawValue)
 						+ costConcat1
-						+ s.getSeq(iNext, jPrev).w * costConcat2 + s.getSeq(iNext, jPrev).c
+						+ s.getSeq(iNext, jPrev, infoIndex.W.rawValue) * costConcat2 + s.getSeq(iNext, jPrev, infoIndex.C.rawValue)
 						+ costConcat3
-						+ s.getSeq(jNext, data.dimension).w * costConcat4 + s.getSeq(jNext, data.dimension).c
+						+ s.getSeq(jNext, data.dimension, infoIndex.W.rawValue) * costConcat4 + s.getSeq(jNext, data.dimension, infoIndex.C.rawValue)
 
 			if costNew < costBest {
 				costBest = costNew - EPSILON
@@ -193,7 +193,7 @@ func searchTwoOpt(s: inout Solution, data: Data) -> Bool {
 		let iPrev = i-1
 		let sIPrev = s.sequence[iPrev]
 		let sI = s.sequence[i]
-		var revSeqCost = s.getSeq(i, i+1).t
+		var revSeqCost = s.getSeq(i, i+1, infoIndex.T.rawValue)
 
 		for j in i+2..<data.dimension {
 			let jNext = j+1
@@ -201,14 +201,14 @@ func searchTwoOpt(s: inout Solution, data: Data) -> Bool {
 			let sJ = s.sequence[j]
 			let sJNext = s.sequence[jNext]
 
-			revSeqCost += data.getDistance(sJPrev, sJ) * (s.getSeq(i, j).w - 1.0)
+			revSeqCost += data.getDistance(sJPrev, sJ) * (s.getSeq(i, j, infoIndex.W.rawValue) - 1.0)
 
-			let costConcat1 = s.getSeq(0, iPrev).t + data.getDistance(sJ, sIPrev)
-			let costConcat2 = costConcat1 + s.getSeq(i, j).t + data.getDistance(sJNext, sI)
+			let costConcat1 = s.getSeq(0, iPrev, infoIndex.T.rawValue) + data.getDistance(sJ, sIPrev)
+			let costConcat2 = costConcat1 + s.getSeq(i, j, infoIndex.T.rawValue) + data.getDistance(sJNext, sI)
 
-			let costNew = s.getSeq(0, iPrev).c
-						+ s.getSeq(i, j).w * costConcat1 + revSeqCost
-						+ s.getSeq(jNext, data.dimension).w * costConcat2 + s.getSeq(jNext, data.dimension).c
+			let costNew = s.getSeq(0, iPrev, infoIndex.C.rawValue)
+						+ s.getSeq(i, j, infoIndex.W.rawValue) * costConcat1 + revSeqCost
+						+ s.getSeq(jNext, data.dimension, infoIndex.W.rawValue) * costConcat2 + s.getSeq(jNext, data.dimension, infoIndex.C.rawValue)
 
 			if costNew < costBest {
 				costBest = costNew - EPSILON
@@ -248,14 +248,14 @@ func searchOrOpt(s: inout Solution, blockSize: Int, data: Data) -> Bool {
             let sK = s.sequence[k]
             let sKNext = s.sequence[kNext]
             
-            let costConcat1 = s.getSeq(0, k).t + data.getDistance(sK, sI)
-            let costConcat2 = costConcat1 + s.getSeq(i, j).t + data.getDistance(sJ, sKNext)
-            let costConcat3 = costConcat2 + s.getSeq(kNext, iPrev).t + data.getDistance(sIPrev, sJNext)
+            let costConcat1 = s.getSeq(0, k, infoIndex.T.rawValue) + data.getDistance(sK, sI)
+            let costConcat2 = costConcat1 + s.getSeq(i, j, infoIndex.T.rawValue) + data.getDistance(sJ, sKNext)
+            let costConcat3 = costConcat2 + s.getSeq(kNext, iPrev, infoIndex.T.rawValue) + data.getDistance(sIPrev, sJNext)
 
-            let costNew = s.getSeq(0, k).c
-                         + s.getSeq(i, j).w                  * costConcat1 + s.getSeq(i, j).c
-                         + s.getSeq(kNext, iPrev).w          * costConcat2 + s.getSeq(kNext, iPrev).c
-                         + s.getSeq(jNext, data.dimension).w * costConcat3 + s.getSeq(jNext, data.dimension).c
+            let costNew = s.getSeq(0, k, infoIndex.C.rawValue)
+                         + s.getSeq(i, j, infoIndex.W.rawValue)                  * costConcat1 + s.getSeq(i, j, infoIndex.C.rawValue)
+                         + s.getSeq(kNext, iPrev, infoIndex.W.rawValue)          * costConcat2 + s.getSeq(kNext, iPrev, infoIndex.C.rawValue)
+                         + s.getSeq(jNext, data.dimension, infoIndex.W.rawValue) * costConcat3 + s.getSeq(jNext, data.dimension, infoIndex.C.rawValue)
 
             if(costNew < costBest){
                 costBest = costNew - EPSILON
@@ -269,14 +269,14 @@ func searchOrOpt(s: inout Solution, blockSize: Int, data: Data) -> Bool {
             let sK = s.sequence[k]
             let sKNext = s.sequence[kNext]
 
-            let costConcat1 = s.getSeq(0, iPrev).t + data.getDistance(sIPrev, sJNext)
-            let costConcat2 = costConcat1 + s.getSeq(jNext, k).t + data.getDistance(sK, sI)
-            let costConcat3 = costConcat2 + s.getSeq(i, j).t + data.getDistance(sJ, sKNext)
+            let costConcat1 = s.getSeq(0, iPrev, infoIndex.T.rawValue) + data.getDistance(sIPrev, sJNext)
+            let costConcat2 = costConcat1 + s.getSeq(jNext, k, infoIndex.T.rawValue) + data.getDistance(sK, sI)
+            let costConcat3 = costConcat2 + s.getSeq(i, j, infoIndex.T.rawValue) + data.getDistance(sJ, sKNext)
 
-            let costNew = s.getSeq(0, iPrev).c
-                    + s.getSeq(jNext, k).w              * costConcat1 + s.getSeq(jNext, k).c
-                    + s.getSeq(i, j).w                  * costConcat2 + s.getSeq(i, j).c
-                    + s.getSeq(kNext, data.dimension).w * costConcat3 + s.getSeq(kNext, data.dimension).c
+            let costNew = s.getSeq(0, iPrev, infoIndex.C.rawValue)
+                    + s.getSeq(jNext, k, infoIndex.W.rawValue)              * costConcat1 + s.getSeq(jNext, k, infoIndex.C.rawValue)
+                    + s.getSeq(i, j, infoIndex.W.rawValue)                  * costConcat2 + s.getSeq(i, j, infoIndex.C.rawValue)
+                    + s.getSeq(kNext, data.dimension, infoIndex.W.rawValue) * costConcat3 + s.getSeq(kNext, data.dimension, infoIndex.C.rawValue)
 
             if costNew < costBest {
                 costBest = costNew - EPSILON
