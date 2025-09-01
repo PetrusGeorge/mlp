@@ -5,11 +5,11 @@ struct SubseqInfo {
 }
 
 struct Solution {
-	var sequence = [Int]()
+	var sequence = ContiguousArray<Int>()
 	var cost = 0.0
 
 	// Subseq matrix
-	var seq = [SubseqInfo]()
+	var seq = ContiguousArray<SubseqInfo>()
 	var dimension = 0
 
 	// This will copy the subseq info
@@ -23,7 +23,7 @@ struct Solution {
 		dimension = sequence.count
 
 		if seq.count == 0 {
-			seq = Array(repeating: SubseqInfo(), count: dimension*dimension)
+			seq = ContiguousArray(repeating: SubseqInfo(), count: dimension*dimension)
 		}
 
 		for i in 0..<dimension {

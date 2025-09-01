@@ -10,7 +10,7 @@ enum Move {
 	case orOpt(Int)
 }
 
-extension Array {
+extension ContiguousArray {
 
 	mutating func reinsert(blockStart: Int, blockSize: Int, at: Int) {
 		if at > blockStart {
@@ -35,11 +35,11 @@ extension Array {
     }
 }
 
-func sort(arr: inout Array<Int>, r: Int, data: Data){
+func sort(arr: inout ContiguousArray<Int>, r: Int, data: Data){
 	quickSort(&arr, 0, arr.count-1, data, r)
 }
 
-func quickSort(_ arr: inout Array<Int>, _ left: Int, _ right: Int, _ data: Data, _ r: Int) {
+func quickSort(_ arr: inout ContiguousArray<Int>, _ left: Int, _ right: Int, _ data: Data, _ r: Int) {
 
 	if left >= right {
 		return
@@ -51,7 +51,7 @@ func quickSort(_ arr: inout Array<Int>, _ left: Int, _ right: Int, _ data: Data,
 
 }
 
-func partition(_ arr: inout Array<Int>, _ left: Int, _ right: Int, _ data: Data, _ r: Int) -> Int {
+func partition(_ arr: inout ContiguousArray<Int>, _ left: Int, _ right: Int, _ data: Data, _ r: Int) -> Int {
 	let pivot = arr[right]
 	var i = left-1
 
@@ -72,7 +72,7 @@ func construction(data: inout Data) -> Solution {
 	s.sequence = [0]
 
 	let _ = data.rndCrnt() // Mock alpha rnd choice
-	var cl = Array(1..<data.dimension)
+	var cl = ContiguousArray(1..<data.dimension)
 	var r = 0
 	while !cl.isEmpty {
 		sort(arr: &cl, r: r, data: data)

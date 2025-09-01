@@ -3,8 +3,8 @@ import Foundation
 // Check if class has better performance over struct
 struct Data {
 	var dimension = 0
-	var matrix = [Double]()
-	var rnd = [Int]()
+	var matrix = ContiguousArray<Double>()
+	var rnd = ContiguousArray<Int>()
 	var rndIdx = 0
 
 	func getDistance(_ i: Int, _ j: Int) -> Double {
@@ -26,7 +26,7 @@ struct Data {
 
 		let dimension = Int(lines[0])!
 		self.dimension = dimension
-		self.matrix = Array(repeating: 0, count: (dimension*dimension))
+		self.matrix = ContiguousArray(repeating: 0, count: (dimension*dimension))
 		for i in 0...dimension-2 {
 
 
