@@ -38,8 +38,9 @@ rust/**/*.rs.bk
 rust/*.pdb
 rust/solve
 
-load
-
 # c++
 cplusplus/solve
 cplusplus/obj
+
+load
+distance_matrix
