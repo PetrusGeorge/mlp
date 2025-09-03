@@ -97,18 +97,15 @@ function swap(s::Array{Int64,1}, i::Int64, j::Int64)
     s[i], s[j] = s[j], s[i]
 end
 
-function reinsert(s::Array{Int64,1}, i::Int64, j::Int64, pos::Int64)
-    # func from https://github.com/JuliaLang/julia/blob/master/base/array.jl
-    _deleteat!(a::Vector, i::Integer, delta::Integer) =
-        ccall(:jl_array_del_at, Cvoid, (Any, Int, UInt), a, i - 1, delta)
 
+function reinsert(s::Array{Int,1}, i::Int, j::Int, pos::Int)
     sz = j - i + 1
     if i < pos
         splice!(s, pos:pos-1, s[i:j]) 
-        _deleteat!(s, i, sz)
+        splice!(s, i:i+sz-1)
     else
         splice!(s, pos:pos-1, s[i:j]) 
-        _deleteat!(s, i+sz, sz)
+        splice!(s, i+sz:i+2*sz-1)
     end
 end
 
