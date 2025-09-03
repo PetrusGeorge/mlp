@@ -338,7 +338,7 @@ fn RVND(solut: &mut tSolution, rnd: &mut Rnd, data: &Data) {
         Moves::OR_OPT_3(3),
     ];
     let mut improv_flag: bool;
-  
+
     while neighbd_list.is_empty() == false {
         let index: usize = rnd.rnd[rnd.rnd_index];
         rnd.rnd_index += 1;
@@ -364,33 +364,17 @@ fn RVND(solut: &mut tSolution, rnd: &mut Rnd, data: &Data) {
         } else {
             neighbd_list.remove(index);
         }
-
     }
 }
 
 fn perturb(sl: &Vec<usize>, rnd: &mut Rnd) -> Vec<usize> {
-    let mut rng = rand::thread_rng();
-
-    let size_max = if (s.len() as f64 / 10.0) as usize >= 2 {
-        (s.len() as f64 / 10.0) as usize
-    } else {
-        2
-    };
-    let size_min = 2;
-
-    let mut range = size_min..size_max;
-
-    if size_max == 2 {
-        range = 0..1;
-    }
+    let mut s = sl.clone();
+    let mut A_start = 1;
+    let mut A_end = 1;
+    let mut B_start = 1;
+    let mut B_end = 1;
 
     while (A_start <= B_start && B_start <= A_end) || (B_start <= A_start && A_start <= B_end) {
-        A_start = rng.gen_range(1..s.len() - 1 - size_max);
-        A_end = A_start + rng.gen_range(range.clone());
-
-        B_start = rng.gen_range(1..s.len() - 1 - size_max);
-        B_end = B_start + rng.gen_range(range.clone());
-
         A_start = rnd.rnd[rnd.rnd_index];
         rnd.rnd_index += 1;
         A_end = A_start + rnd.rnd[rnd.rnd_index];
@@ -453,14 +437,12 @@ fn GILS_RVND(Imax: usize, Iils: usize, R: [f64; 26], rnd: &mut Rnd, data: &Data)
                 solut_partial.s = solut_crnt.s.clone();
                 solut_partial.cost = solut_crnt.cost;
                 iterILS = 0;
-
             }
 
             solut_crnt.s = perturb(&solut_partial.s, rnd);
             update_subseq_info_matrix(&mut solut_crnt, data);
             iterILS += 1;
         }
-
 
         if solut_partial.cost < solut_best.cost {
             solut_best.s = solut_partial.s.clone();

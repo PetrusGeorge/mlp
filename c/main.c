@@ -129,7 +129,7 @@ void construct(int ** ret, const double alpha, tData * data){
     for (int j = 1; j < data->dimen; ++j) {
         sort(cL, cL_size, r, data);
 
-        int index = info->rnd[info->rnd_index++];
+        int index = data->rnd[data->rnd_index++];
         int c = cL[index];
         s[j] = c;
         r = c;
@@ -419,11 +419,11 @@ void perturb(tSolution * solut_crnt, tSolution * solut_partial, tData * data) {
     int B_end = 1;
 
     while ((A_start <= B_start && B_start <= A_end) || (B_start <= A_start && A_start <= B_end)) {
-        A_start = info->rnd[info->rnd_index++];
-        A_end = A_start + info->rnd[info->rnd_index++];
+        A_start = data->rnd[data->rnd_index++];
+        A_end = A_start + data->rnd[data->rnd_index++];
 
-        B_start = info->rnd[info->rnd_index++];
-        B_end = B_start + info->rnd[info->rnd_index++];
+        B_start = data->rnd[data->rnd_index++];
+        B_end = B_start + data->rnd[data->rnd_index++];
     }
     
     if (A_start < B_start) {

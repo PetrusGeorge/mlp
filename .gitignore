@@ -32,6 +32,7 @@ tempfile
 cplusplus/solve
 cplusplus/obj
 
+c/solve
 c/obj
 
 distance_matrix
