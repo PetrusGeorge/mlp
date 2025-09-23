@@ -9,6 +9,11 @@
       let
         pkgs = import nixpkgs {inherit system; };
         pkgs-stable = import nixpkgs-stable {inherit system; };
+
+        pythonWithPackages = pkgs.python3.withPackages (ps: with ps; [
+          pandas
+          psutil
+        ]);
       in
       {
         devShells.default = pkgs.mkShell.override {stdenv = pkgs.swift.stdenv; } {
@@ -21,7 +26,7 @@
             julia
             lua
             luajit
-            python3
+            pythonWithPackages
             pkgs-stable.pypy3
             rustc
             cargo
