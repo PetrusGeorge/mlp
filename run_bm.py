@@ -136,7 +136,7 @@ def main():
     args = parser.parse_args()
 
     sources = ["java", "dotnet", "mcs", "python3", "pypy", "julia", "cpp", "cppOOP",
-            "fortran", "node", "lua", "luajit", "rust", "octave", "c", "matlab", "golang"]
+            "fortran", "node", "lua", "luajit", "rust", "octave", "c", "swift", "golang"]
 
     for i in args.lang:
         if i not in sources:
@@ -169,7 +169,8 @@ def main():
             "luajit" : "lua",
             "rust" : "rust",
             #"octave" : "octave",
-            "matlab" : "octave",
+            # "matlab" : "octave",
+            "swift" : "swift",
             "golang" : "go"
             }
 
