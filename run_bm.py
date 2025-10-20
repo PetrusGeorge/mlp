@@ -144,8 +144,6 @@ def main():
             exit(0)
 
     sources = args.lang[:]
-    global data_dir
-    data_dir = args.out
     instances = []
     if args.instance is not None:
         instances.append(args.instance)
