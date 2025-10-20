@@ -6,7 +6,6 @@ import sys
 import pandas as pd
 import concurrent.futures
 import psutil as pU
-import time
 
 data_dir = "../mlp_testao"
 ###data_dir = "../mlp_tudao"
@@ -32,7 +31,6 @@ def ds_open(lang_name):
 def get_mem_avg(pid):
 
     p = pU.Process(pid=pid)
-    interval = time.time()
     MB = 1024**2
 
     gap = 1e-10
@@ -41,31 +39,16 @@ def get_mem_avg(pid):
     mem_avg = 0
     count = 0
     while True:
-    #while count < 50:
-        # time.sleep(0.1)
-        #time.sleep(gap)
-
-        # funciona durante 10s
-        #print(time.time() - interval)
-        #if time.time() - interval >= 10:
-            #break
-
         with p.oneshot():
-            #if p.status() != pU.STATUS_RUNNING:
             if p.status() == pU.STATUS_ZOMBIE:
-            # if p.status() == pU.STATUS_STOPPED:
                 print(p.status())
                 break
-            #if p.status() == pU.STATUS_SLEEPING:
-            #if p.status() == pU.STATUS_RUNNING:
-            #if p.status() == pU.STATUS_ZOMBIE:
-                #print(p.status())
 
             mem = p.memory_info()
             mem_total = (float(mem.rss)- float(mem.shared))/ MB
             if mem_total < gap:
                 print("break by gap")
-                break;
+                break
             elif mem_total > mem_max:
                 mem_max = mem_total
 
@@ -83,7 +66,6 @@ def get_COST(_str):
         #print(l)
         if l.find("COST") != -1:
             i = l.find(":")
-            col = l[:i]
             val = float(l[i+1:].replace(',', '.'))
             return val
 
@@ -94,7 +76,6 @@ def get_TIME(_str):
         #print(l)
         if l.find("TIME") != -1:
             i = l.find(":")
-            col = l[:i]
             val = float(l[i+1:].replace(',', '.'))
             return val
     return
@@ -125,12 +106,31 @@ def get_info(lang):
 
     f.close()
 
+def run_parallel_tests(lang, n_runs):
+    all_results = []
+    
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Submit n runs of get_info with the same lang parameter
+        futures = [executor.submit(get_info, lang) for _ in range(n_runs)]
+        
+        # Collect results as they complete
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                result = future.result()
+                all_results.append(result)
+            except Exception as e:
+                print(f"Test failed: {e}")
+                all_results.append({"error": str(e)})
+    
+    return all_results
+
 def main():
 
     parser = argparse.ArgumentParser(description='Run Benchmark')
     parser.add_argument('-i' ,'--instance', help='Path to the instance file.', required= not ('--instances-list' in sys.argv or '-I' in sys.argv ))
     parser.add_argument('-I' ,'--instances-list', help='Path to the file with a list of the paths of the instances.', required=not ('-i' in sys.argv or '--instance' in sys.argv))
     parser.add_argument('-n' , default=1, type=int, help='Number of times each language will run opa opa opa')
+    parser.add_argument('--par' , default=False, type=bool, help='Run in parallel')
     parser.add_argument('--lang' , nargs='+', required=True, help='Sources: python3, java, mcs, dotnet, julia, cpp, lua, javascript, matlab, golang')    
     parser.add_argument('--out' ,  default=data_dir,  help='Output dir')
     args = parser.parse_args()
@@ -144,9 +144,10 @@ def main():
             exit(0)
 
     sources = args.lang[:]
-    instance = args.instance
+    global data_dir
+    data_dir = args.out
     instances = []
-    if args.instance != None:
+    if args.instance is not None:
         instances.append(args.instance)
     else:
         instances = open(args.instances_list, 'r')
@@ -203,9 +204,16 @@ def main():
                 # compila oq eh necessario
                 os.system("./build.sh")
 
-            for i in range(n):
-                if lang == 'rust':
-                    os.system("./build.sh")
+            infos = []
+            if args.par:
+                infos = run_parallel_tests(lang, n)
+            else:
+                for _ in range(n):
+                    infos.append(get_info(lang))
+                    
+            for info in infos:
+                # if lang == 'rust':
+                #     os.system("./build.sh")
 
                 info = get_info(lang)
                 info.update({"source" : lang, "instance" : inst, "branch" : get_branch()})

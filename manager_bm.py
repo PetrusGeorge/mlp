@@ -1,11 +1,10 @@
 import os
 import argparse
-import time
 
 bm_dir = '../virtu_test'
-inst_list_file = 'virtu_test.txt' 
+inst_list_file = 'lista' 
 inst_list = []
-min_test = 1
+min_test = 10
 
 #sources = ["java", "dotnet", "python3", "pypy", "julia", "cpp", "cpp-OOP",
          #"fortran", "node", "luajit", "rust", "c", "golang"]
@@ -33,7 +32,7 @@ lang_dir = {
         }
 
 
-if os.path.isdir(bm_dir) == False:
+if not os.path.isdir(bm_dir):
     os.mkdir(bm_dir)
 
 with open(inst_list_file) as f:
@@ -45,7 +44,7 @@ def count(source, lang, inst, path):
     print(bm_dir)
     f_name = os.path.join(bm_dir, lang+'.csv')
     c = 0
-    if os.path.isfile(f_name) == False:
+    if not os.path.isfile(f_name):
         return c
     with open(f_name) as f:
         for line in f:
@@ -79,7 +78,7 @@ for i in range(min_test):
     for s in sources:
         for inst in inst_list:
             if count(s, lang_dir[s], inst, bm_dir) < min_test:
-                os.system(f'python3 run_bm.py -i {inst} --lang {s}')
+                os.system(f'python3 run_bm.py -i {inst} --lang {s} -n {min_test} --par true')
 
 
 
