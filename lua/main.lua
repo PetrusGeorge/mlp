@@ -85,17 +85,31 @@ function subseq_load(solut, info)
     --print(solut.cost)
 end
 
-function sort(arr, r, info) 
-    for i = 1, #arr do
-        for j = 1, #arr-i do
-            if info.c[r][arr[j]] > info.c[r][arr[j+1]] then
-                local tmp = arr[j]
-                arr[j] = arr[j+1]
-                arr[j+1] = tmp
-            end
+local function partition(arr, left, right, info, r)
+    local pivot = arr[right]
+    local i = left - 1
+    for j=left, right do
+        if info.c[r][arr[j]] < info.c[r][pivot] then
+            i = i + 1
+            arr[i], arr[j] = arr[j], arr[i]
         end
     end
+    arr[i + 1], arr[right] = arr[right], arr[i + 1]
+    return i + 1
 end
+
+local function quicksort(arr, left, right, info, r)
+    if left < right then
+        local pivot = partition(arr, left, right, info, r)
+        quicksort(arr, left, pivot - 1, info, r)
+        quicksort(arr, pivot + 1, right, info, r)
+    end
+end
+
+local function sort(arr, r, info)
+    quicksort(arr, 1, #arr, info, r)
+end
+
 
 function construction(alpha, info) 
     local s = {1}
@@ -558,12 +572,8 @@ function main()
     print("TIME: ", os.clock()-start)
 end
 
-local profiler = require("profiler")
-profiler.start()
 -- Code block and/or called functions to profile --
 main()
-profiler.stop()
-profiler.report("profiler.log")
 
 --[[
 collectgarbage("stop")
