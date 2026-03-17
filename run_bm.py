@@ -213,7 +213,6 @@ def main():
                 # if lang == 'rust':
                 #     os.system("./build.sh")
 
-                info = get_info(lang)
                 info.update({"source" : lang, "instance" : inst, "branch" : get_branch()})
 
                 ds = pd.concat([ds, pd.DataFrame(info)], ignore_index=True)
