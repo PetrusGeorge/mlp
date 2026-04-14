@@ -7,7 +7,7 @@ CPPC = gcc
 #############################
 
 #### opcoes de compilacao e includes
-CCOPT = $(BITS_OPTION) -fPIC -O0 -fexceptions -DIL_STD -std=c99 -lm -ggdb
+CCOPT = $(BITS_OPTION) -fPIC -Ofast -fexceptions -DIL_STD -std=c99 -lm
 CONCERTINCDIR = $(CONCERTDIR)/include
 #############################
 

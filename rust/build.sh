@@ -1,5 +1,5 @@
 #! /bin/bash
 
-rm target/debug/main
-cargo build
-cp target/debug/main .
+rm target/release/main
+cargo build --release
+cp target/release/main .
