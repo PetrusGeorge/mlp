@@ -1,2 +1,2 @@
 #! /usr/bin/bash
-dotnet build
+dotnet build -c Release
